@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=5"/>
+
+        <title>Restaurant Reviews</title>
+
+        <link rel="stylesheet" href="styles/main.css" />
+        <link rel="stylesheet" href="styles/icon.css" />
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtcuVEmXSLRFWAS07yCPNqnunLfgYgju4&callback=initMap&libraries=&v=weekly" defer></script>
+        
+        <script src="data.js"></script>
+    </head>
+
+    <body>
+        <h1>Avis de Restaurant</h1>
+
+        <div class="main-block">
+            <div class="list-restaurants">
+                <form class="resto-review-filter">
+                    <div>
+                        <input type="checkbox" name="excellent" id="excellent" /> 
+                        <label for="excellent">Excellent</label>
+                    </div>
+                    
+                    <div>
+                        <input type="checkbox" name="tres-bien" id="tres-bien" /> 
+                        <label for="tres-bien">Très bien</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="moyen" id="moyen" /> 
+                        <label for="moyen">Moyen</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="mediocre" id="mediocre" /> 
+                        <label for="mediocre">Médiocre</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="horrible" id="horrible" /> 
+                        <label for="horrible">Horrible</label>
+                    </div>
+                 </form>
+            </div>
+            
+            <div id="map"></div>
+        </div>
+
+        <script>
+            let listCheckboxElts = document.querySelectorAll('.resto-review-filter input[type=checkbox]'),
+                listResto = {},
+                map;
+            
+            const pos = { lat: 16.237769, lng: -61.603356 },
+                  listRatingsClass = ['star-one', 'star-two', 'star-three', 'star-four', 'star-five'];
+
+            let hideReviews = function(event) {
+                let restoElt = event.currentTarget;
+                
+                restoElt.addEventListener('click', displayReviews);
+                restoElt.removeEventListener('click', hideReviews);
+                
+                let listReviewsElt = restoElt.getElementsByClassName('resto-list-reviews')[0];
+                    imgRestoElt = restoElt.getElementsByClassName('resto-img')[0];
+
+                restoElt.removeChild(listReviewsElt);
+                
+                if(imgRestoElt) {
+                    restoElt.removeChild(imgRestoElt);
+                }
+
+                let restoData = listResto[restoElt.dataset.id];
+                restoData.infoWindow.close();
+            };
+
+            let displayReviews = function(event) {
+                let restoElt = event.currentTarget;
+                restoElt.removeEventListener('click', displayReviews);
+                restoElt.addEventListener('click', hideReviews);
+                
+                const indexResto = restoElt.dataset.id,
+                      resto = data[indexResto],
+                      reviewsLen = resto['ratings'].length;
+
+                ajaxGet('https://maps.googleapis.com/maps/api/streetview/metadata?size=400x400&location='+resto['lat']+','+resto['long']+'&key=AIzaSyBtcuVEmXSLRFWAS07yCPNqnunLfgYgju4', function(reponse) {
+                    let imgMetaData = JSON.parse(reponse),
+                        listReviewsElt = restoElt.querySelector('.resto-list-reviews');
+    
+                    if(imgMetaData.status == 'OK') {
+                        let imgStreetView = new Image();
+
+                        imgStreetView.addEventListener('load', function() {
+                            imgStreetView.className = 'resto-img';
+                            restoElt.insertBefore(imgStreetView, listReviewsElt);
+                        });
+
+                        imgStreetView.src = 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location='+resto['lat']+','+resto['long']+'&key=AIzaSyBtcuVEmXSLRFWAS07yCPNqnunLfgYgju4'; 
+                    }
+                });
+                
+                for(let i = 0; i < reviewsLen; i++) {
+                    let review = resto['ratings'][i];
+                    createReview(review, restoElt);
+                }
+
+                let restoData = listResto[indexResto];
+                restoData.infoWindow.open(map, restoData.marker);
+            };
+
+            let filterResto = function() {
+                const listNotations = ['horrible', 'mediocre', 'moyen', 'tres-bien', 'excellent'];
+                let checkedRatings = [];
+                
+                for(let c = 0; c < listCheckboxElts.length; c++) {
+                    let checkboxElt = listCheckboxElts[c];
+                    
+                    if(checkboxElt.checked) {
+                        let notation = checkboxElt.name,
+                            rating = listNotations.indexOf(notation) + 1;
+                        
+                        checkedRatings.push(rating);
+                    }
+                }
+                
+                for(let c = 0; c < data.length; c++) {
+                    let restoData = data[c],
+                        restoAverage = getAverage(restoData),
+                        checked = checkedRatings.indexOf(restoAverage);
+                    
+                    if(checked == -1) {
+                        deleteResto(c);
+                    } else {
+                        createResto(data[c], c);
+                    }
+                }
+            };
+
+            function getAverage(data) {
+                let reviewsLen = data['ratings'].length,
+                    sum = 0;
+                
+                for(let i = 0; i < reviewsLen; i++) {
+                    let review = data['ratings'][i];
+                    sum += review['stars'];
+                }
+
+                return Math.ceil(sum / reviewsLen);
+            }
+
+            function createReview(review, restoElt) {
+                const rating = review['stars'] - 1;
+                
+                let tag = '<i class="icon-star '+listRatingsClass[rating]+'"></i>';
+                    tag += '<p>'+review['comment']+'</p>';
+
+                let reviewElt = document.createElement('div');
+                reviewElt.className = 'resto-reviews';
+                reviewElt.innerHTML = tag;
+
+                let listReviewsElt = restoElt.getElementsByClassName('resto-list-reviews')[0];
+                
+                if(!listReviewsElt) {
+                    listReviewsElt = document.createElement('div');
+                    listReviewsElt.className = 'resto-list-reviews';
+                    restoElt.appendChild(listReviewsElt);
+                }
+
+                listReviewsElt.appendChild(reviewElt);
+            }
+
+            function createResto(resto, idResto) {
+                if(!(idResto in listResto)) {
+                    let marker = new google.maps.Marker({
+                        position: {
+                            lat: resto.lat,
+                            lng: resto.long
+                        },
+
+                        map: map
+                    });
+
+                    const average = getAverage(resto);
+                    
+                    let tag = '<header>';
+                    tag += '<i class="resto-star-average icon-star '+ listRatingsClass[average - 1] +'"></i>';
+                    tag += '<h3 class="resto-titre">' + resto['restaurantName'] + '</h3>';
+                    tag += '<p class="resto-adress"><strong>Adresse : </strong>' + resto['address'] + '</p>'
+                    tag += '</header>';
+
+                    let articleElt = document.createElement('article');
+                    articleElt.className = 'resto';
+                    articleElt.innerHTML = tag;
+                    articleElt.dataset.id = idResto;
+                    articleElt.addEventListener('click', displayReviews);
+                    
+                    let listRestaurantsElt = document.getElementsByClassName('list-restaurants')[0];
+                    listRestaurantsElt.appendChild(articleElt);
+
+                    const infowindow = new google.maps.InfoWindow({content: tag});
+
+                    marker.addListener('click', function() {
+                        infowindow.open(map, marker);
+                    });
+                    
+                    listResto[idResto] = {
+                        elt: articleElt,
+                        marker: marker,
+                        infoWindow: infowindow
+                    };
+                }
+            }
+
+            function deleteResto(idResto) {
+                if(idResto in listResto) {
+                    let resto = listResto[idResto];
+                    
+                    listRestaurantsElt = document.getElementsByClassName('list-restaurants')[0];
+                    listRestaurantsElt.removeChild(resto.elt);
+                    resto.marker.setMap(null);
+                    delete listResto[idResto];
+                }
+            }
+
+            function ajaxGet(url, callback) {
+                var req = new XMLHttpRequest();
+                req.open('GET', url);
+
+                req.addEventListener('load', function () {
+                    if(req.status >= 200 && req.status < 400) {
+                        callback(req.responseText);
+                    } else {
+                        console.error(req.status + ' ' + req.statusText + ' ' + url);
+                    }
+                });
+               
+                req.addEventListener('error', function () {
+                    console.error('Erreur réseau avec l\'URL ' + url);
+                });
+                
+                req.send(null);
+            }
+
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 11
+                });
+
+                if("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function(position){
+                        if(!pos) {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                        }
+
+                        map.setCenter(pos);
+
+                        const marker = new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                            icon: './imgs/marker-green.png'
+                        });
+
+                        for(let i = 0; i < data.length; i++) {
+                            createResto(data[i], i);
+                        }
+                    
+                        for(let i = 0; i < listCheckboxElts.length; i++) {
+                            let checkboxElt = listCheckboxElts[i];
+                            checkboxElt.addEventListener('change', filterResto);
+                        }
+                    });
+                } else {
+                    console.error('La geolocation est indisponible');
+                }
+            }
+        </script>
+    </body>
+</html>

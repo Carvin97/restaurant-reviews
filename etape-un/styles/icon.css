@@ -1,0 +1,13 @@
+/* icon-star */
+
+.icon-star {
+    display: block;
+    width: 71px; 
+    height: 13px;
+}
+
+.star-one { background: url('../imgs/etoileUn.png') center center / 100% 100% }
+.star-two { background: url('../imgs/etoileDeux.png') center center / 100% 100% }
+.star-three { background: url('../imgs/etoileTrois.png') center center / 100% 100% }
+.star-four { background: url('../imgs/etoileQuatre.png') center center / 100% 100% }
+.star-five { background: url('../imgs/etoileCinq.png') center center / 100% 100% }

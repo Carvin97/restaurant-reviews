@@ -1,0 +1,70 @@
+html,
+body { margin: 0 }
+
+/* body */
+
+h1 { text-align: center }
+.main-block { display: flex }
+
+/* main-block */
+
+.main-block > div { flex: 1 }
+.list-restaurants { max-width: 450px }
+#map { height: 890px }
+
+/* liste-restaurants */
+
+.resto-review-filter { 
+    display: flex;
+    background-color: gainsboro; 
+    padding: 10px;
+}
+
+.resto-review-filter div { flex: 1 }
+
+.resto-review-filter label,
+.resto-review-filter input { 
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.resto { 
+    border-bottom: 2px solid grey;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.resto:hover { background-color: gainsboro }
+
+/* resto */
+
+.resto .resto-titre, 
+.resto .resto-adress { 
+    margin: 0;
+    padding: 10px 0;
+}
+
+.resto .resto-star-average { 
+    transform: translateY(4px); 
+    float: right;
+}
+
+.resto-list-reviews {
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: initial;
+}
+
+.resto .resto-img {
+    display: block;
+    margin: auto;
+}
+
+/* resto-list-reviews */
+
+.resto-reviews .icon-star { 
+    float: left;
+    margin-right: 10px;
+}
