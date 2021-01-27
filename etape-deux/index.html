@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=5"/>
+
+        <title>Restaurant Reviews Etape Deux</title>
+
+        <link rel="stylesheet" href="styles/main.css" />
+        <link rel="stylesheet" href="styles/icon.css" />
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+        <!-- Chargement du SDK de google map et accès aux donnéex de l'api -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtcuVEmXSLRFWAS07yCPNqnunLfgYgju4&callback=initMap&libraries=&v=weekly" defer></script>
+    </head>
+
+    <body>
+        <h1>Avis de Restaurant</h1>
+
+        <div class="main-block">
+            <div class="list-restaurants">
+                <form class="resto-review-filter">
+                    <div>
+                        <input type="checkbox" name="excellent" id="excellent" /> 
+                        <label for="excellent">Excellent</label>
+                    </div>
+                    
+                    <div>
+                        <input type="checkbox" name="tres-bien" id="tres-bien" /> 
+                        <label for="tres-bien">Très bien</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="moyen" id="moyen" /> 
+                        <label for="moyen">Moyen</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="mediocre" id="mediocre" /> 
+                        <label for="mediocre">Médiocre</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" name="horrible" id="horrible" /> 
+                        <label for="horrible">Horrible</label>
+                    </div>
+                </form>
+
+                <form class="resto-add-form">
+                    <div class="resto-field resto-name">
+                        <label for="resto-name">Nom du resaurant : </label>
+                        <input type="text" id="resto-name"/>
+                    </div>
+
+                    <div class="resto-field resto-field-coordinate">
+                        <div class="resto-field-coordinate-lat">
+                            <label for="lat">Latitude</label>
+                            <input type="number" id="lat"/>
+                        </div>
+
+                        <div class="resto-field-coordinate-long">
+                            <label for="long">Longitude</label>
+                            <input type="number" id="long">
+                        </div>
+
+                        <input class="btn-pointer-resto" type="button" value="pointer">
+                    </div>
+
+                    <div class="resto-field resto-adress">
+                        <textarea placeholder="Adresse du restaurant" id="resto-adress"></textarea>
+                    </div>
+
+                    <input class="btn-publish-review" type="button" value="Publier">
+                </form>
+            </div>
+            
+            <div id="map"></div>
+        </div>
+        
+        <script src="scripts/data.js"></script>
+        <!--<script src="scripts/main.js"></script>-->
+        <script src="scripts/old.js"></script>
+    </body>
+</html>

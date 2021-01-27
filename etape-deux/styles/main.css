@@ -1,0 +1,170 @@
+*, 
+*::before,
+*::after { box-sizing: border-box }
+
+html,
+body { margin: 0 }
+
+/* body */
+
+h1 { text-align: center }
+.main-block { display: flex }
+
+/* main-block */
+
+.main-block > div { flex: 1 }
+.list-restaurants { max-width: 450px }
+#map { height: 880px }
+
+/* liste-restaurants */
+
+.resto-review-filter { 
+    display: flex;
+    background-color: gainsboro; 
+    padding: 10px;
+}
+
+.resto-review-filter div { flex: 1 }
+
+.resto-review-filter label,
+.resto-review-filter input { 
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.resto { 
+    border-bottom: 2px solid grey;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.resto:hover { background-color: gainsboro }
+
+/* Formulaire d'ajout de resto */
+
+.resto-add-form {
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin: 0 10px;
+}
+
+.resto-add-form .resto-field {
+    background-color: white;
+    padding: 5px;
+}
+
+.resto-field input,
+.resto-field textarea,
+.resto-field label {
+    border: none;
+    font-size: 14px;
+    color: grey;
+}
+
+.resto-field input:focus,
+.resto-field textarea:focus,
+.resto-field label:focus {
+    outline: 0;
+}
+
+.resto-add-form .resto-field-coordinate { display: flex }
+.resto-field-coordinate-lat { margin-right: 5px }
+.resto-field-coordinate input { width: 100px }
+
+.resto-adress textarea {
+    width: 100%;
+    resize: none;
+    height: 80px;
+}
+
+.resto-field-coordinate .btn-pointer-resto {
+    width: 60px;
+    margin-left: 5px;
+}
+
+.resto-field-coordinate .btn-pointer-resto:hover {
+    box-shadow: 1px 0px 1px black;
+    cursor: pointer;
+}
+
+/* resto */
+
+.resto .resto-titre, 
+.resto .resto-adress { 
+    margin: 0;
+    padding: 10px 0;
+}
+
+.resto .resto-star-average { 
+    transform: translateY(4px); 
+    float: right;
+}
+
+.resto-list-reviews {
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: initial;
+}
+
+.resto .resto-img {
+    display: block;
+    margin: auto;
+}
+
+/* resto-list-reviews */
+
+.resto-reviews .icon-star { 
+    float: left;
+    margin-right: 10px;
+}
+
+.resto-add-review textarea {
+    border: none;
+    resize: none;
+
+    border-bottom: 2px solid #4285f4;
+    width: 100%;
+    height: 80px;
+    padding: 0 10px;
+}
+
+.resto-add-review textarea,
+.rating-review input,
+.rating-review label {
+    color: grey;
+    font-size: 14px;
+    border: 0;
+}
+
+.resto-add-review textarea:focus,
+.rating-review input:focus,
+.btn-publish-review:focus { outline: 0 }
+
+.rating-review {
+    padding: 10px;
+    background-color: white;
+}
+
+.btn-publish-review {
+    background-color: #4285f4;
+    border: 0;
+    width: 120px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-publish-review:hover { box-shadow: 1px 0px 4px black }
+.btn-publish-review:active { background-color: #2777f8 }
+
+.msg-error { 
+    color: crimson;
+    font-weight: bold;
+}
