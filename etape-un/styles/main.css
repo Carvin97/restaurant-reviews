@@ -1,3 +1,7 @@
+*, 
+*::before,
+*::after { box-sizing: border-box }
+
 html,
 body { margin: 0 }
 
@@ -68,3 +72,47 @@ h1 { text-align: center }
     float: left;
     margin-right: 10px;
 }
+
+.resto-add-review textarea {
+    border: none;
+    resize: none;
+
+    border-bottom: 2px solid #4285f4;
+    width: 100%;
+    height: 80px;
+    padding: 0 10px;
+}
+
+.resto-add-review textarea,
+.rating-review input,
+.rating-review label {
+    color: grey;
+    font-size: 14px;
+    border: 0;
+}
+
+.resto-add-review textarea:focus,
+.rating-review input:focus,
+.btn-publish-review:focus { outline: 0 }
+
+.rating-review {
+    padding: 10px;
+    background-color: white;
+}
+
+.btn-publish-review {
+    background-color: #4285f4;
+    border: 0;
+    width: 120px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-publish-review:hover { box-shadow: 1px 0px 4px black }
+.btn-publish-review:active { background-color: #2777f8 }

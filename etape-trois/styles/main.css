@@ -49,6 +49,11 @@ h1 { text-align: center }
 
 /* Formulaire d'ajout de resto */
 
+.resto-add-form-title {
+    text-align: center;
+    margin: 5px;
+}
+
 .resto-add-form {
     background-color: rgb(245, 245, 245);
     padding: 10px;
@@ -170,7 +175,8 @@ h1 { text-align: center }
 .btn-publish-review:hover { box-shadow: 1px 0px 4px black }
 .btn-publish-review:active { background-color: #2777f8 }
 
-.msg-error { 
+.tooltip { 
     color: crimson;
     font-weight: bold;
+    display: none;
 }
